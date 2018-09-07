@@ -1,0 +1,301 @@
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.asset_type
+
+CREATE TABLE fixed_asset.dbo.asset_type (
+	asset_type_id bigint NOT NULL IDENTITY(1,1),
+	asset_type varchar(255),
+	created_userid varchar(255),
+	depreciation_frequency_type varchar(255),
+	depreciation_method varchar(255),
+	method_type varchar(255),
+	modified_date date,
+	register_date date,
+	short_asset_type varchar(255),
+	total_initial_value numeric(19,2),
+	updated_userid varchar(255),
+	useful_life varchar(255),
+	CONSTRAINT PK__asset_ty__95A1E2BCD1BF6FF6 PRIMARY KEY (asset_type_id)
+) go;
+
+
+
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.assets
+
+CREATE TABLE fixed_asset.dbo.assets (
+	id bigint NOT NULL IDENTITY(1,1),
+	asset_name varchar(255),
+	asset_short_name varchar(255),
+	created_userid varchar(255),
+	modified_date date,
+	percentage int,
+	register_date date,
+	updated_userid varchar(255),
+	asset_type_id bigint,
+	CONSTRAINT PK__assets__3213E83F4AE8C929 PRIMARY KEY (id),
+	CONSTRAINT FK49r44hdxipe8s708you8ipfxr FOREIGN KEY (asset_type_id) REFERENCES fixed_asset.dbo.asset_type(asset_type_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.balance_sheet
+
+CREATE TABLE fixed_asset.dbo.balance_sheet (
+	balance_sheet_id bigint NOT NULL IDENTITY(1,1),
+	activity varchar(255),
+	balance numeric(19,2),
+	transaction_date datetime2,
+	asset_type_id bigint,
+	branch_id int,
+	CONSTRAINT PK__balance___06D8C460408C7DFD PRIMARY KEY (balance_sheet_id),
+	CONSTRAINT FK3x2c3tp8t3th61b17wsy15rb2 FOREIGN KEY (branch_id) REFERENCES fixed_asset.dbo.branch(branch_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK8a0lrotvrm2nds2rudxa265ws FOREIGN KEY (asset_type_id) REFERENCES fixed_asset.dbo.asset_type(asset_type_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.branch
+
+CREATE TABLE fixed_asset.dbo.branch (
+	branch_id int NOT NULL IDENTITY(1,1),
+	address varchar(255),
+	branch_code varchar(255),
+	branch_name varchar(255),
+	company_name varchar(255),
+	created_userid varchar(255),
+	ishead varchar(255),
+	modified_date date,
+	register_date date,
+	status varchar(255),
+	updated_userid varchar(255),
+	CONSTRAINT PK__branch__E55E37DE07A64AB4 PRIMARY KEY (branch_id)
+) go;
+
+
+
+
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.department
+
+CREATE TABLE fixed_asset.dbo.department (
+	id bigint NOT NULL,
+	created_userid varchar(255),
+	department_id varchar(255),
+	department_name varchar(255),
+	department_type varchar(255),
+	modified_date date,
+	register_date date,
+	updated_userid varchar(255),
+	CONSTRAINT PK__departme__3213E83F310914E6 PRIMARY KEY (id)
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.depreciation
+
+CREATE TABLE fixed_asset.dbo.depreciation (
+	depreciation_id bigint NOT NULL IDENTITY(1,1),
+	accumulated_depreciation numeric(19,2),
+	depreciate_frequency int,
+	depreciate_status varchar(255),
+	depreciated_life int,
+	depreciation_date datetime2,
+	depreciation_amount numeric(19,2),
+	requested_date datetime2,
+	residual_amount numeric(19,2),
+	updated_user bigint,
+	fixed_asset_id bigint,
+	requested_user bigint,
+	CONSTRAINT PK__deprecia__389B9E8E23BAA4AA PRIMARY KEY (depreciation_id),
+	CONSTRAINT FK9uue772dg3pabr0hh7wvnk8wc FOREIGN KEY (fixed_asset_id) REFERENCES fixed_asset.dbo.fixed_assets(fixed_asset_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKl10dxa4aeafcwlemysbh7on30 FOREIGN KEY (requested_user) REFERENCES fixed_asset.dbo.users(users_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+
+
+
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.depreciation_history
+
+CREATE TABLE fixed_asset.dbo.depreciation_history (
+	history_id bigint NOT NULL IDENTITY(1,1),
+	accumulated_depreciation numeric(19,2),
+	depreciate_frequency int,
+	depreciate_status varchar(255),
+	depreciated_life int,
+	depreciation_date datetime2,
+	depreciation_amount numeric(19,2),
+	requested_date datetime2,
+	residual_amount numeric(19,2),
+	updated_user bigint,
+	depreciation_id bigint,
+	fixed_asset_id bigint,
+	requested_user bigint,
+	CONSTRAINT PK__deprecia__096AA2E9BC0BC664 PRIMARY KEY (history_id),
+	CONSTRAINT FK2niksxx8tbctmwwgy2j3ykmqr FOREIGN KEY (depreciation_id) REFERENCES fixed_asset.dbo.depreciation(depreciation_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK6nledytnyy89scqlspb712yk6 FOREIGN KEY (requested_user) REFERENCES fixed_asset.dbo.users(users_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKac2bsjdpcbtwsi4woaaxvge4s FOREIGN KEY (fixed_asset_id) REFERENCES fixed_asset.dbo.fixed_assets(fixed_asset_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.fixed_asset_requisition
+
+CREATE TABLE fixed_asset.dbo.fixed_asset_requisition (
+	requisition_id bigint NOT NULL IDENTITY(1,1),
+	amount numeric(19,2),
+	info varchar(255),
+	invoice_no varchar(255),
+	purchase_date datetime2,
+	quantity int,
+	remark varchar(255),
+	requested_date datetime2,
+	requisition_activity varchar(255),
+	status varchar(255),
+	total_price numeric(19,2),
+	unit_price numeric(19,2),
+	updated_date datetime2,
+	updated_user bigint,
+	asset_id bigint,
+	asset_type_id bigint,
+	branch_id int,
+	requested_user bigint,
+	vendor_id bigint,
+	department varchar(255),
+	CONSTRAINT PK__fixed_as__2B676C336F2B1462 PRIMARY KEY (requisition_id),
+	CONSTRAINT FK1kil7gkvsfc4tcp2plc9sgk80 FOREIGN KEY (asset_id) REFERENCES fixed_asset.dbo.assets(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK9sgjv3h452u3d6wqlmmj51ucf FOREIGN KEY (asset_type_id) REFERENCES fixed_asset.dbo.asset_type(asset_type_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKbby02p389sfnge75a9lulo7i8 FOREIGN KEY (branch_id) REFERENCES fixed_asset.dbo.branch(branch_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKnobjsviombctuy57jlxy592f5 FOREIGN KEY (requested_user) REFERENCES fixed_asset.dbo.users(users_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKpao5036s1sk8bffg8862k1ykx FOREIGN KEY (vendor_id) REFERENCES fixed_asset.dbo.vendor(vendor_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.fixed_asset_transfer
+
+CREATE TABLE fixed_asset.dbo.fixed_asset_transfer (
+	transfer_id bigint NOT NULL IDENTITY(1,1),
+	created_date datetime2,
+	original_branch int,
+	remark varchar(255),
+	transfer_date datetime2,
+	transfer_status varchar(255),
+	updated_date datetime2,
+	updated_user bigint,
+	asset_id bigint,
+	asset_type_id bigint,
+	created_user bigint,
+	current_branch int,
+	fixed_asset_id bigint,
+	requisition_id bigint,
+	department varchar(255),
+	CONSTRAINT PK__fixed_as__78E6FD33F3B17D35 PRIMARY KEY (transfer_id),
+	CONSTRAINT FK2ycfb5l3f9409yegfnfd8ckfw FOREIGN KEY (requisition_id) REFERENCES fixed_asset.dbo.fixed_asset_requisition(requisition_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK81nrexogcaigeehdjmkbmwl67 FOREIGN KEY (fixed_asset_id) REFERENCES fixed_asset.dbo.fixed_assets(fixed_asset_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK8rfpog22m812lqevk9rtejnor FOREIGN KEY (asset_type_id) REFERENCES fixed_asset.dbo.asset_type(asset_type_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK97ppd4euj7rpucnde1pbclw96 FOREIGN KEY (created_user) REFERENCES fixed_asset.dbo.users(users_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKdc3bp7ppy9vnsrc408rh848i3 FOREIGN KEY (current_branch) REFERENCES fixed_asset.dbo.branch(branch_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKrpgi9xg66tcoyvrqpheuw5mhv FOREIGN KEY (asset_id) REFERENCES fixed_asset.dbo.assets(id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.fixed_assets
+
+CREATE TABLE fixed_asset.dbo.fixed_assets (
+	fixed_asset_id bigint NOT NULL IDENTITY(1,1),
+	depreciation_frequency_type varchar(255),
+	depreciation_method varchar(255),
+	fixed_asset_serial varchar(255),
+	frequency int,
+	invoice_no varchar(255),
+	method_type varchar(255),
+	percentage int,
+	purchase_date datetime2,
+	purchase_price numeric(19,2),
+	purchase_requisition bigint,
+	sell_requisition bigint,
+	status varchar(255),
+	transfer_requisition bigint,
+	updated_date datetime2,
+	useful_life_in_months int,
+	writeoff_requisition bigint,
+	asset_id bigint,
+	asset_type_id bigint,
+	branch_id int,
+	updated_user bigint,
+	vendor_id bigint,
+	department varchar(255),
+	CONSTRAINT PK__fixed_as__265EBCE729B4FA29 PRIMARY KEY (fixed_asset_id),
+	CONSTRAINT FK1bnmjg8alk5ax9e1jxjxr13gu FOREIGN KEY (asset_type_id) REFERENCES fixed_asset.dbo.asset_type(asset_type_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK49qyr991mf98tms8pubgxmplc FOREIGN KEY (asset_id) REFERENCES fixed_asset.dbo.assets(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKl6p5wip03l8d62hira8ms2w1k FOREIGN KEY (updated_user) REFERENCES fixed_asset.dbo.users(users_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKmifs4ldtama4p43e3ewohkhl7 FOREIGN KEY (vendor_id) REFERENCES fixed_asset.dbo.vendor(vendor_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FKt4tr5yjiqvhssf90ormkc6jsx FOREIGN KEY (branch_id) REFERENCES fixed_asset.dbo.branch(branch_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.[role]
+
+CREATE TABLE fixed_asset.dbo.[role] (
+	role_id int NOT NULL IDENTITY(1,1),
+	[role] varchar(255),
+	CONSTRAINT PK__role__760965CC2033B2D9 PRIMARY KEY (role_id)
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.users
+
+CREATE TABLE fixed_asset.dbo.users (
+	users_id bigint NOT NULL IDENTITY(1,1),
+	address varchar(255),
+	created_userid varchar(255),
+	email varchar(255),
+	gender varchar(255),
+	mobile_no varchar(255),
+	modified_date date,
+	password varchar(255),
+	register_date date,
+	status varchar(255),
+	updated_userid varchar(255),
+	user_full_name varchar(255),
+	user_name varchar(255),
+	branch int,
+	[role] int,
+	address1 varchar(255),
+	address2 varchar(255),
+	CONSTRAINT PK__users__EAA7D14BDFCD39CB PRIMARY KEY (users_id),
+	CONSTRAINT FK20wcxq3dnh6io9qug4vc90p0p FOREIGN KEY ([role]) REFERENCES fixed_asset.dbo.[role](role_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	CONSTRAINT FK9cryxhfipo28jam5cd8440s88 FOREIGN KEY (branch) REFERENCES fixed_asset.dbo.branch(branch_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) go;
+
+-- Drop table
+
+-- DROP TABLE fixed_asset.dbo.vendor
+
+CREATE TABLE fixed_asset.dbo.vendor (
+	vendor_id bigint NOT NULL IDENTITY(1,1),
+	address varchar(255),
+	contact_no varchar(255),
+	created_userid varchar(255),
+	modified_date date,
+	register_date date,
+	updated_userid varchar(255),
+	vendor_name varchar(255),
+	address1 varchar(255),
+	address2 varchar(255),
+	CONSTRAINT PK__vendor__0F7D2B78852364D4 PRIMARY KEY (vendor_id)
+) go;
